@@ -1,0 +1,23 @@
+# Fetched inputs are reproducible: every one has a fetch_*.py that rebuilds it.
+# The three archives are also far over GitHub's 100 MB per-file hard limit
+# (deltaromeo 1,069 MB, hwaitt 236 MB, ayuser_japan 174 MB).
+raw/*
+
+# Except the two that CANNOT be re-fetched. Both sites forbid automated
+# collection, so these are saved by hand in a browser and would otherwise be
+# lost.
+!raw/bha.csv
+!raw/hri_flat.html
+!raw/hri_nh.html
+
+# The dataset itself is not tracked. It is rebuilt from the fetchers, it is
+# rewritten in full on every build so each commit would add a fresh 24 MB blob,
+# and its licence depends on which sources you chose to include. Build your own.
+out/
+
+__pycache__/
+
+# The build journal. Kept on disk because it records why each source was taken
+# or rejected, but not shipped: it is a diary rather than documentation, and
+# every round in it reports figures that a later round changed.
+PLAN.md

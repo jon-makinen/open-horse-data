@@ -1,0 +1,42 @@
+MIT License
+
+Copyright (c) 2026 Jon Makinen
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+---
+
+This licence covers the CODE in this repository only.
+
+It does NOT cover the CSV the code produces. That file is a derivative of
+whichever sources you chose to fetch, and it inherits their terms. Two of the
+optional archives make the result undistributable: hwaitt is CC BY-NC 4.0, so a
+build including it cannot be used commercially, and the ayuser Japanese archive
+states no licence at all, so there is no grant to redistribute a derivative of
+it. Delete those two zips from raw/ before building if you intend to publish or
+sell what comes out.
+
+Even a build without them mixes CC BY-SA (Wikipedia) with CDLA-Sharing-1.0
+(the deltaromeo archive). Both are share-alike, so a published build carries
+share-alike terms and attribution obligations. One further caveat on that
+archive: it is uploaded as CDLA-Sharing-1.0, but its schema is Racing Post
+shaped, so the uploader may not have held the rights they granted.
+
+Work out what applies to your build before you republish it. See the Sources
+table in README.md for the licence on every input.
