@@ -25,7 +25,6 @@ COLUMN_GROUPS = [
     ("Connections", ["Owner"]),
     # Where each derived value came from. Rating carries its own scale label.
     ("Source", ["Colour Source", "Distance Source", "Earnings Source"]),
-    ("Meta", ["Who added", "AI Generated", "Comments"]),
 ]
 COLUMNS = [c for _, cols in COLUMN_GROUPS for c in cols]
 OUTPUT_NAME = "horses.csv"
@@ -1289,7 +1288,6 @@ def finalise(row):
     """Fill the derived columns the sources do not carry."""
     if not row.get("Breed"):
         row["Breed"] = "Thoroughbred"
-    row["AI Generated"] = "FALSE"
     return row
 
 
@@ -2058,8 +2056,6 @@ def broodmare_age(visible_foals):
     if visible_foals <= 2:
         return 7
     return 6 if visible_foals <= 8 else 5
-BROODMARE_NOTE = ("Broodmare, no race record here. Foaling year estimated from "
-                  "her first known foal, and can be several years late.")
 
 
 # Punctuation and particle case are not part of a horse's identity, so
@@ -2191,7 +2187,8 @@ def add_broodmares(written):
     What is known about her is real and already here: the foals name her, the
     source declared her country of birth, and the Damsire column on her foals is
     her own sire. So the row is assembled from her produce rather than invented.
-    Only Foaled is an estimate, and it says so in Comments.
+    Only Foaled is an estimate, taken from her first known foal, so it can
+    be several years late.
 
     A mare is skipped when her bare name is already used by a horse that ran.
     Two rows would then share a name, and a foal looking its dam up by name
@@ -2262,8 +2259,7 @@ def add_broodmares(written):
         mare = {"Name": name, "Foaled": str(foaled), "Sex": "F",
                 "Breed": m["breeds"].most_common(1)[0][0] if m["breeds"]
                          else "Thoroughbred",
-                "Country": countries.pop() if countries else "",
-                "Comments": BROODMARE_NOTE, "AI Generated": "FALSE"}
+                "Country": countries.pop() if countries else ""}
         if mare["Country"]:
             mare["_country_birth"] = True
         if m["sires"]:

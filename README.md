@@ -9,11 +9,14 @@ is a derivative of whichever sources you fetch and it inherits their terms, so
 there is no one file that is correct for everybody to hand out. Running the
 commands below takes about an hour, most of it downloading.
 
-A full build is **591,887 horses across 37 countries**, one row each, 27
+A full build is **591,887 horses across 37 countries**, one row each, 24
 columns, a single header row. 104,419 of them are broodmares who never raced,
-carried so pedigrees do not dead-end after one generation; they are marked in
-`Comments` and filter out in one pass. Dropping the two archives that cannot be
-redistributed (see LICENSE) gives 489,355 horses instead.
+carried so pedigrees do not dead-end after one generation. They have no race
+record, so `Sex` is `F` and `Starts` is empty; that filter also catches 31,424
+raced-elsewhere mares whose starts are simply unknown. Their `Foaled` year is
+estimated from their first known foal and can be several years late. Dropping
+the two archives that cannot be redistributed (see LICENSE) gives 489,355
+horses instead.
 
 ## Run it
 
@@ -29,9 +32,19 @@ redistributed (see LICENSE) gives 489,355 horses instead.
     python3 fetch_kaggle.py          # 248 MB, optional
     python3 build_csv.py
 
-Output is `out/horses.csv`, about 103 MB. Fetching and building are separate,
+Output is `out/horses.csv`, about 92 MB. Fetching and building are separate,
 so you can rebuild offline as often as you like, and any missing file in `raw/`
 is simply skipped, which is how you opt out of a source.
+
+Google Sheets caps a spreadsheet at 10 million cells, which the full build
+passes on row count alone. `make_sheets_csv.py` cuts it to what will open:
+
+    python3 make_sheets_csv.py    # out/horses_sheets.csv, 368,943 rows, 54 MB
+
+It keeps every horse rated 70 or better and every ancestor behind them, so no
+pedigree dead-ends mid-tree. Turkey is left out because TJK ratings are their
+own scale and one threshold cannot judge both. 36 of the 38 countries survive.
+It is a convenience copy, not the dataset; the full file is a rebuild away.
 
     python3 parsers.py                            # self-check
     python3 build_csv.py --max-per-country 8000   # even country mix
@@ -83,13 +96,13 @@ results with no pedigree and no English names.
 
 ## The columns
 
-27 columns. Four of them say where a value came from, because most of this file
+24 columns. Four of them say where a value came from, because most of this file
 is derived rather than measured. `Damsire` is the dam's own sire, the third name
 on a racecard pedigree line.
 
 | Column | Values |
 | --- | --- |
-| `Rating Scale` | `BHA` published, `TJK` published Turkish, `Estimated` from the horse's record, `Pedigree` from its parents, `Random` capped at 70 for horses with no record |
+| `Rating Scale` | `BHA` published, `TJK` published Turkish, `Estimated` from the horse's record, `Pedigree` from its parents, `Random` drawn from the real population up to 90, for horses with no record |
 | `Colour Source` | `data` for 46,538 horses, `modelled` for the rest |
 | `Distance Source` | `raced` where the horse actually ran, `category` from a rankings distance band, `pedigree` inherited |
 | `Earnings Source` | `summed` from per-race prizes, `published` from a career figure |
