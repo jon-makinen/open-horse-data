@@ -290,6 +290,17 @@ def parse_earnings(s):
         if symbol in prefix:
             currency = code
             break
+    # A suffix is just as binding as a prefix: El Condor Pasa's "453,000,800
+    # [[JPY]]" leaves the prefix empty, and the franc check below then read the
+    # French line further down the field and called his yen francs. Only a
+    # currency touching the amount counts, or Ardan's "+ £1,712,000" would
+    # claim the francs in front of it.
+    if not currency:
+        tail = raw[m.end():].lstrip()
+        for symbol, code in CURRENCIES:
+            if tail.startswith(symbol):
+                currency = code
+                break
     # "[[French franc|F]]8,498,090 + £1,712,000" collapses to a bare F, so the
     # pound belonging to the second figure won the whole-string fallback below
     # and Ardan's francs were labelled sterling.
@@ -849,6 +860,12 @@ def _selfcheck():
     assert parse_earnings("9: 4-2-2") == ("", "")               # a record, not earnings
     assert parse_earnings("4,116,150 francs") == ("4116150", "FRF")
     assert parse_earnings("[[French franc|F]]8,498,090 + £1,712,000") == ("8498090", "FRF")
+    # A trailing code binds tighter than a franc mention later in the field.
+    assert parse_earnings("453,000,800 [[JPY]]<br>[[France|FR]]: 3,800,000 "
+                          "[[French franc|francs]]") == ("453000800", "JPY")
+    assert parse_earnings("615,485,000 [[Yen|JPY]] + 1,000,000 "
+                          "[[French franc|FF]]") == ("615485000", "JPY")
+    assert parse_earnings("1,446,200 francs ($2,780)") == ("1446200", "FRF")
     assert parse_year("11 February 2008") == "2008"
     assert map_country("Great Britain") == "England"
     assert map_country("United Kingdom of Great Britain and Ireland") == "England"
